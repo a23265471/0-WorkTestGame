@@ -7,5 +7,4 @@ public class PlayerStageData : ScriptableObject
 {
     public PlayerData playerData;
     
-    
 }

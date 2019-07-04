@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+        //    Debug.Log(playerBehaviour = null);
             playerBehaviour.Jump();
 
 

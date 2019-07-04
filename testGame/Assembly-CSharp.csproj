@@ -61,12 +61,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\02-Script\00-Model\PlayerData.cs" />
+    <Compile Include="Assets\02-Script\00-Model\PlayerJsonData.cs" />
     <Compile Include="Assets\02-Script\00-Model\PlayerStageData.cs" />
     <Compile Include="Assets\02-Script\01-Behaviour\PlayerBehaviour.cs" />
     <Compile Include="Assets\02-Script\02-Controller\PlayerController.cs" />
     <Compile Include="Assets\02-Script\02-Controller\StageDataController.cs" />
     <Compile Include="Assets\02-Script\GameFacade.cs" />
     <Compile Include="Assets\02-Script\GameManager.cs" />
+    <Compile Include="Assets\Boomlagoon\JSON\JSONObject.cs" />
+    <Compile Include="Assets\Boomlagoon\JSON\TestScene\JSONObjectTester.cs" />
+    <None Include="Assets\Boomlagoon\Readme.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/MoonMoonGames/00-TestGame/TestGame/testGame/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

@@ -1,0 +1,2 @@
+D:\MoonMoonGames\00-TestGame\TestGame\testGame\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+D:\MoonMoonGames\00-TestGame\TestGame\testGame\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache

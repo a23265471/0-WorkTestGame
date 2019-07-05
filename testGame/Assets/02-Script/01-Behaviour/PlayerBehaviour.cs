@@ -6,6 +6,8 @@ public class PlayerBehaviour : MonoBehaviour
 {
     private PlayerJsonData playerData;
 
+    private GameManager gameManager;
+
     #region Component
     private Rigidbody2D rigidbody2;
 
@@ -42,6 +44,7 @@ public class PlayerBehaviour : MonoBehaviour
     private void Init()
     {
         rigidbody2 = gameObject.GetComponent<Rigidbody2D>();
+        gameManager = GameFacade.GetInstance().gameManager;
         StartCoroutine(LoadData());
         MoveSmoothly = null;
         GravityCroutine = null;
@@ -65,76 +68,28 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void Jump()
     {
-        /*rigidbody2.gravityScale = 0;
+        rigidbody2.gravityScale = 0;
         rigidbody2.mass = 0;
-        rigidbody2.AddForce(new Vector2(0,2000));
-        rigidbody2.gravityScale = 1;
-        rigidbody2.mass = 5;*/
+        rigidbody2.velocity = Vector2.zero;
+        rigidbody2.AddForce(new Vector2(0, playerData.JumpForce));
+      
+        rigidbody2.gravityScale = playerData.Gravity;
+        rigidbody2.mass = playerData.Weight;
 
         clickCount += 1;
-
-        currentSpeed = playerData.JumpSpeed;
-        // rigidbody2.velocity = new Vector2(0, currentSpeed);
-        if (MoveSmoothly != null)
-        {
-            StopCoroutine(MoveSmoothly);
-        }
-
-        GravityCroutine = moveSmoothly(0, 1000, playerData.FallAcceleration, -playerData.MaxFallSpeed, 0, clickCount, null);
-
-        MoveSmoothly = moveSmoothly(0, playerData.JumpHigh, playerData.JumpAcceleration, 3, playerData.JumpSpeed, clickCount, GravityCroutine);
-        StartCoroutine(MoveSmoothly);
-        Debug.Log("aa = " + clickCount);
+        Debug.Log(playerData.Score);
     }
 
-    IEnumerator moveSmoothly(float currentMoveDis ,float dis,float acceleration,float minSpeed ,float maxSpeed,int state,IEnumerator nextCroutine)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-      //  float moveTime = playerData.JumpHigh / playerData.JumpSpeed;
-
-        yield return new WaitForFixedUpdate();
-
-        float currentFramMoveDistance;
-        currentSpeed -= acceleration;
-        currentSpeed = Mathf.Clamp(currentSpeed, minSpeed, maxSpeed);
-
-        currentFramMoveDistance = currentSpeed * Time.deltaTime;
-
-        rigidbody2.velocity = transform.rotation * new Vector2(0, currentSpeed);
-
-        Debug.Log(currentMoveDis);
-
-        if (currentMoveDis >= dis)
+        if (other.CompareTag("Obstacle"))
         {
-            rigidbody2.velocity = transform.rotation * new Vector2(0, 0);
-            //     Gravity();
-            // MoveSmoothly = null;
-            StartCoroutine(nextCroutine);
-        }
-        else
-        {
-            currentMoveDis += currentFramMoveDistance;
-            if (state == clickCount)
-            {
-            
-                StartCoroutine(moveSmoothly(currentMoveDis, dis, acceleration, minSpeed, maxSpeed, state, nextCroutine));
+            gameManager.GameOver();
 
-            }
 
         }
 
 
-        /* if (currentSpeed > 0)
-         {
-             StartCoroutine(SlowDownSpeed());
-         }*/
-
-    }
-
-    public void Gravity()
-    {
-        rigidbody2.velocity = new Vector2(0, -playerData.MaxFallSpeed);
-
-        MoveSmoothly= moveSmoothly(0, 1000, playerData.FallAcceleration, -playerData.MaxFallSpeed, 0,clickCount,null);
 
 
     }

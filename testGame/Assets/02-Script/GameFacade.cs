@@ -21,6 +21,9 @@ public class GameFacade : MonoBehaviour
         return instance;
     }
 
+
+    public GameManager gameManager;
+
     #region Controller
    // private StageDataController stageDataController;
 
@@ -36,7 +39,7 @@ public class GameFacade : MonoBehaviour
 
     public void Initialize()
     {
-
+        gameManager = gameObject.GetComponent<GameManager>();
      //   stageDataController = gameObject.GetComponent<StageDataController>();
         StartCoroutine("LoadData");
 

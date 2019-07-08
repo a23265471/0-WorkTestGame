@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -31,7 +33,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Start()
     {
-        
+       // StartCoroutine(PostJson());
 
     }
 
@@ -56,8 +58,7 @@ public class PlayerBehaviour : MonoBehaviour
        //Gravity();
     }
 
-    
-
+   
     IEnumerator LoadData()
     {
 
@@ -77,8 +78,52 @@ public class PlayerBehaviour : MonoBehaviour
         rigidbody2.mass = playerData.Weight;
 
         clickCount += 1;
-        Debug.Log(playerData.Score);
+      //  Debug.Log(JsonUtility.ToJson(playerData));
+
+
+
     }
+
+    IEnumerator PostJson()
+    {
+        WWWForm form = new WWWForm();
+
+        PlayerJsonData playerDatas = new PlayerJsonData();
+        playerDatas.Gravity = 5;
+        form.AddField("Gravity", playerDatas.Gravity.ToString());
+        form.AddField("Score", "10");
+      /* form.AddField("JumpForce", playerData.JumpForce.ToString());
+        form.AddField("Weight", playerData.Weight.ToString());
+        form.AddField("JumpAcceleration", playerData.JumpAcceleration.ToString());*/
+        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/PHP.php", form))
+        {
+
+            yield return www.SendWebRequest();
+
+
+            if (www.isNetworkError || www.isHttpError)
+            {
+
+                Debug.Log(www.error);
+            }
+            else
+            {
+                PlayerJsonData PlayerJson = new PlayerJsonData();
+                PlayerJson = JsonUtility.FromJson<PlayerJsonData>(www.downloadHandler.text.Trim("[]".ToCharArray()));
+
+                
+
+              //  Debug.Log(www.downloadHandler.text);
+                Debug.Log(JsonUtility.ToJson(PlayerJson));
+
+            }
+
+        }
+        //   Debug.Log(PlayerJson.MaxFallSpeed);
+
+
+    }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {

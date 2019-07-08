@@ -63,6 +63,7 @@
     <Compile Include="Assets\02-Script\00-Model\PlayerJsonData.cs" />
     <Compile Include="Assets\02-Script\01-Behaviour\ObstacleBehaviour.cs" />
     <Compile Include="Assets\02-Script\01-Behaviour\PlayerBehaviour.cs" />
+    <Compile Include="Assets\02-Script\02-Controller\CreateObstacle.cs" />
     <Compile Include="Assets\02-Script\02-Controller\PlayerController.cs" />
     <Compile Include="Assets\02-Script\02-Controller\ScoreController.cs" />
     <Compile Include="Assets\02-Script\02-Controller\SpriteController.cs" />

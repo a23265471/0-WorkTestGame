@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 using UnityEngine.Networking;
 
 public class StageDataController : MonoBehaviour
@@ -26,20 +27,24 @@ public class StageDataController : MonoBehaviour
     {
         WWWForm form = new WWWForm();
         //   form.AddField("MaxFallSpeed", 2);
-        form.AddField("Score", 10);
+        //
+        //     Debug.Log(form);
 
         PlayerJsonData playerDatas = new PlayerJsonData();
-       // playerDatas.Score = 10;
+        playerDatas.Gravity = 5;
+        playerDatas.Score = 10;
+        form.AddField("Score", playerDatas.Score.ToString());
+        form.AddField("Gravity", playerDatas.Gravity.ToString());
 
-        string test2 = JsonUtility.ToJson(playerDatas);
+        //   string test2 = JsonUtility.ToJson(playerDatas);
+
 
         using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/PHP.php", form))
         {
 
-        //    www.SetRequestHeader("Score", "10");
-           /* www.uploadHandler*/
-
             yield return www.SendWebRequest();
+
+            // yield return www.SendWebRequest();
 
             //  JSONObject json = JSONObject.Parse(www.downloadHandler.text.Trim("[]".ToCharArray()));
 
@@ -50,8 +55,8 @@ public class StageDataController : MonoBehaviour
             }
             else
             {
-             //   www.SetRequestHeader("Content-Type", "application/json");
-
+                //   www.SetRequestHeader("Content-Type", "application/json");
+                PlayerJson = new PlayerJsonData();
                 PlayerJson = JsonUtility.FromJson<PlayerJsonData>(www.downloadHandler.text.Trim("[]".ToCharArray()));
 
                 Debug.Log(www.downloadHandler.text);

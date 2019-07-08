@@ -13,6 +13,28 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    [SerializeField]
+    int Level;
+
+    private void Awake()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        Level = 1;
+
+    }
+
+    public void ChangeLevel(int level)
+    {
+        Level = level;
+ //       Level= Mathf.Clamp
+
+
+    }
+          
     public void GameOver()
     {
         Time.timeScale = 0;

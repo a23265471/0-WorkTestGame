@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 
 
-enum spriteAtlas {Player,Obstacle,Background }
+enum spriteAtlas {Player,Obstacle_S, Obstacle_M, Obstacle_L }
 
 public class SpriteController : MonoBehaviour
 {

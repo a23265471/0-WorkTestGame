@@ -51,8 +51,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ed60e1b6f35eac34c9aa5317c6e98205, type: 3}
   - {fileID: 21300000, guid: 3211406f727519242a53de2c87645173, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Obstacle_S
   - Obstacle_L
+  - Obstacle_S
   - Player
   - Obstacle_M
   m_Tag: Atlas

@@ -5,16 +5,22 @@ using UnityEngine;
 public class CreateObstacle : MonoBehaviour
 {
     [SerializeField]
-    private GameObject quarterObstaclePrefab_S;
-    [SerializeField]
-    private GameObject quarterObstaclePrefab_M;
-    [SerializeField]
-    private GameObject quarterObstaclePrefab_L;
+    private ObstaclePrefabInfo[] ObstaclePrefab;
 
-    [SerializeField]
-    private int obstacleAmount;
 
-    private GameObject[] quarterObstacle;
+    private GameObject[] obstacleCollection;
+
+
+    [System.Serializable]
+    private struct ObstaclePrefabInfo
+    {
+        [Header("Obstacle Info")]
+        public string Name;
+        public int ID;
+        public int Amount;
+        public GameObject ObstaclePrefab;
+
+    }
 
     private void Awake()
     {
@@ -23,26 +29,32 @@ public class CreateObstacle : MonoBehaviour
 
     private void Init()
     {
-
         CreatObjectPool();
-        CreateOneObstacle();
-        CreateOneObstacle();
-        CreateOneObstacle();
-
-
+       /* CreateOneObstacle();
+        CreateOneObstacle();*/
+       
 
 
     }
 
-    private GameObject CreateOneObstacle()
+ /*   public void CreatObstacle(bool Size_S,bool Size_M,bool Size_L)
+    {
+        CreateOneObstacle(0, 2, 50, 100);
+        CreateOneObstacle(1, 2, 130, 170);
+        CreateOneObstacle(2, 1, 200, 220);
+
+    }
+    */
+
+    public GameObject CreateOneObstacle(int size,int sectorAmount,float minSpeed,float maxSpeed)
     {
         GameObject ObstacleParent = new GameObject("Obstacle");
 
         int[] rotationAngle;
         rotationAngle = new int[] { 0, 90, 180, 270 };
-        for (int i = 0; i <= Random.Range(0, 3); i++)
+        for (int i = 0; i <= Random.Range(0, sectorAmount); i++) 
         {
-            GameObject obstacle = GetObject();
+            GameObject obstacle = GetObject(ObstaclePrefab[size].ID);
             int angle;
             obstacle.transform.parent = ObstacleParent.transform;
             obstacle.transform.position = Vector3.zero;
@@ -60,52 +72,62 @@ public class CreateObstacle : MonoBehaviour
 
         ObstacleParent.transform.Rotate(new Vector3(0, 0, Random.Range(0f, 360f)));
         ObstacleParent.AddComponent<ObstacleBehaviour>();
-        ObstacleParent.GetComponent<ObstacleBehaviour>().RotateSpeed = Random.Range(100f, 200);
+        ObstacleParent.GetComponent<ObstacleBehaviour>().RotateSpeed = Random.Range(minSpeed, maxSpeed);
 
         return ObstacleParent;
     }
 
- /*   IEnumerator SortRotation()
-    {
-
-
-
-
-    }
-    */
-
-    private void SortObstacle(int currentAngle)
-    {
-       
-
-    }
-       
     private void CreatObjectPool()
     {
-        quarterObstacle = new GameObject[obstacleAmount];
-        for (int j = 0; j < obstacleAmount; j++)
-        {
-            GameObject gameObject = Instantiate(quarterObstaclePrefab_S);
-            quarterObstacle[j] = gameObject;
-            gameObject.SetActive(false);
+        int total = 0;
+        int objectId = 0;
 
+        for (int q = 0; q < ObstaclePrefab.Length; q++)
+        {
+            total += ObstaclePrefab[q].Amount;
+        }
+
+        obstacleCollection = new GameObject[total];
+
+        for (int j = 0; j < ObstaclePrefab.Length; j++)
+        {
+            ObstaclePrefab[j].ID = objectId;
+            for (int i=0;i< ObstaclePrefab[j].Amount; i++)
+            {
+                GameObject gameObject = Instantiate(ObstaclePrefab[j].ObstaclePrefab);
+                obstacleCollection[objectId] = gameObject;
+                objectId += 1;
+                gameObject.SetActive(false);
+
+            }
+           
         }
 
     }
 
-    public GameObject GetObject()
+    public GameObject GetObject(int id)
     {
-        for (int i = 0; i < obstacleAmount; i++)
+        for (int j = 0; j < ObstaclePrefab.Length; j++)
         {
-            if (!quarterObstacle[i].activeInHierarchy)
+            if (ObstaclePrefab[j].ID == id)
             {
-                quarterObstacle[i].SetActive(true);
-                return quarterObstacle[i];
+                for (int i = 0; i < ObstaclePrefab[j].Amount; i++)
+                {
+
+                    if (!obstacleCollection[id].activeInHierarchy)
+                    {
+                        obstacleCollection[id].SetActive(true);
+                        return obstacleCollection[id];
+                    }
+
+                    id += 1;
+
+                }
+                
             }
 
         }
-
-
+        
         return null;
     }
 

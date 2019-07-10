@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class ObstacleController : MonoBehaviour
 {
+    public enum ObstacleSize
+    {
+        Small=0,
+        Medium=1,
+        Large=2,
+        Null=-1
+
+    }
 
     private CreateObstacle createObstacle;
 
@@ -30,7 +38,7 @@ public class ObstacleController : MonoBehaviour
     public struct PartOfObstacle
     {
         //[Header("圓形的尺寸 S:0 M:1 L:2")]
-        public int Size;
+        public ObstacleSize Size;
         [Header("速度範圍")]
         public float MinSpeed;
         public float MaxSpeed;
@@ -43,6 +51,8 @@ public class ObstacleController : MonoBehaviour
 
     }
 
+    PartOfObstacle nullPartOfObstacle;
+
     private void Awake()
     {
         Init();
@@ -52,7 +62,7 @@ public class ObstacleController : MonoBehaviour
 
     private void Start()
     {
-        CreatObstacle(1);
+      
     }
 
     private void Init()
@@ -64,43 +74,80 @@ public class ObstacleController : MonoBehaviour
 
     }
 
-    public void CreatObstacle(int Level)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            CreatObstacle();
+        }
+
+    }
+
+
+
+
+    public void CreatObstacle()
     {
         int randomRange = Random.Range(0, 100);
+
         if (randomRange <= levelSetting.MaxCircleAmountAppearProbability)
-        {
+        {          
+            PartOfObstacle[] appeared = new PartOfObstacle[] { levelSetting.Circle_S, levelSetting.Circle_M, levelSetting.Circle_L };
+            int currentRandomLength = appeared.Length;
             for (int j = 0; j < levelSetting.MaxCircleAmount; j++)
             {
-                CreateCircle(-1);
-            }
 
+                CreateCircle(ref appeared);
+              //  Debug.Log("Create One Circle");
+            }
         }
         else
         {
-            CreateCircle(-1);
+            //CreateCircle(-1);
 
         }
 
     }
     
-    private void CreateCircle(int appearedCircleSize)
+    private void CreateCircle(ref PartOfObstacle[] appearedCircleList/*,ref int currentRandomLength*/)
     {
-        int circleAppearProportionSum = levelSetting.Circle_L.AppearProportion + levelSetting.Circle_M.AppearProportion + levelSetting.Circle_S.AppearProportion;
-        int sizeAppearRange = Random.Range(0, circleAppearProportionSum);
-        
+        int sizeAppearRange;
+        int sizeAppearRangeSum = 0;
+        int currentAppearRange = 0;
 
-        if (sizeAppearRange <= levelSetting.Circle_S.AppearProportion)
+        for (int i = 0; i < appearedCircleList.Length; i++)
         {
-            createObstacle.CreateOneObstacle(levelSetting.Circle_S.Size, levelSetting.Circle_S.MaxSector, levelSetting.Circle_S.MinSpeed, levelSetting.Circle_S.MaxSpeed);
+            if (appearedCircleList[i].Size != ObstacleSize.Null)
+            {
+                sizeAppearRangeSum += appearedCircleList[i].AppearProportion;
+
+            }
+
         }
-        else if (sizeAppearRange > levelSetting.Circle_S.AppearProportion && sizeAppearRange <= (levelSetting.Circle_S.AppearProportion + levelSetting.Circle_M.AppearProportion))
+
+        sizeAppearRange = Random.Range(0, sizeAppearRangeSum);
+
+        for (int j = 0; j < appearedCircleList.Length; j++)
         {
-            createObstacle.CreateOneObstacle(levelSetting.Circle_M.Size, levelSetting.Circle_M.MaxSector, levelSetting.Circle_M.MinSpeed, levelSetting.Circle_M.MaxSpeed);
+
+            if (appearedCircleList[j].Size != ObstacleSize.Null)
+            {
+                if (sizeAppearRange > currentAppearRange && sizeAppearRange <= (currentAppearRange + appearedCircleList[j].AppearProportion))
+                {
+                    createObstacle.CreateOneObstacle((int)appearedCircleList[j].Size, appearedCircleList[j].MaxSector, appearedCircleList[j].MinSpeed, appearedCircleList[j].MaxSpeed);
+                    currentAppearRange += appearedCircleList[j].AppearProportion;
+                    appearedCircleList[j].Size = ObstacleSize.Null;
+                    break;
+                }
+
+
+            }
+
+
         }
-        else
-        {
-            createObstacle.CreateOneObstacle(levelSetting.Circle_L.Size, levelSetting.Circle_M.MaxSector, levelSetting.Circle_M.MinSpeed, levelSetting.Circle_M.MaxSpeed);
-        }
+
+
+
 
 
     }
@@ -109,9 +156,9 @@ public class ObstacleController : MonoBehaviour
 
     private void InitObstacleSetting()
     {
-        levelSetting.Circle_S.Size = 0;
-        levelSetting.Circle_M.Size = 1;
-        levelSetting.Circle_L.Size = 2;
+        levelSetting.Circle_S.Size = ObstacleSize.Small;
+        levelSetting.Circle_M.Size = ObstacleSize.Medium;
+        levelSetting.Circle_L.Size = ObstacleSize.Large;
         
     }
 

@@ -63,7 +63,7 @@ public class CreateObstacle : MonoBehaviour
             while (rotationAngle[angle] == -1)
             {
                 angle = Random.Range(0, 4);
-                Debug.Log(rotationAngle[angle]);
+              //  Debug.Log(rotationAngle[angle]);
 
             }
             obstacle.transform.Rotate(new Vector3(0, 0, rotationAngle[angle]));

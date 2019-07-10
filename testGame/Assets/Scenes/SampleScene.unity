@@ -228,7 +228,7 @@ MonoBehaviour:
   levelSetting:
     Level: 0
     MaxCircleAmount: 2
-    MaxCircleAmountAppearProbability: 72
+    MaxCircleAmountAppearProbability: 100
     Circle_S:
       Size: 0
       MinSpeed: 50
@@ -262,17 +262,17 @@ MonoBehaviour:
   ObstaclePrefab:
   - Name: Obstacle_S
     ID: 0
-    Amount: 10
+    Amount: 20
     ObstaclePrefab: {fileID: 8254326959584063291, guid: c9083c8d932d0e34f8305019311e64cf,
       type: 3}
   - Name: Obstacle_M
     ID: 0
-    Amount: 10
+    Amount: 20
     ObstaclePrefab: {fileID: 2416905234930828911, guid: 6b6e891e4d24eb7458126eddf94123c8,
       type: 3}
   - Name: Obstacle_L
     ID: 0
-    Amount: 10
+    Amount: 20
     ObstaclePrefab: {fileID: 3682049589614471953, guid: 440dda342989021458bd1ebdc3e57bf2,
       type: 3}
 --- !u!1 &232675954

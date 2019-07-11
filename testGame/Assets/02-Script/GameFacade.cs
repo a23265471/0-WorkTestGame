@@ -25,36 +25,27 @@ public class GameFacade : MonoBehaviour
     public GameManager gameManager;
 
     #region Controller
-   // private StageDataController stageDataController;
-
-
+    public StageDataController stageDataController;
+    public ObstacleController obstacleController;
     #endregion
 
 
     #region Data
 
-    public PlayerJsonData PlayerData;
+   // public PlayerJsonData PlayerData;
 
     #endregion
 
     public void Initialize()
     {
         gameManager = gameObject.GetComponent<GameManager>();
-     //   stageDataController = gameObject.GetComponent<StageDataController>();
-        StartCoroutine("LoadData");
+        stageDataController = gameObject.GetComponent<StageDataController>();
+        obstacleController = gameObject.GetComponent<ObstacleController>();
 
       //  if(GetComponent<StageDataController>())
     }
 
-    IEnumerator LoadData()
-    {
-
-        yield return new WaitForEndOfFrame();
-        PlayerData = gameObject.GetComponent<StageDataController>().PlayerJson;
-
-        //Debug.Log(PlayerData.MaxFallSpeed);
-    }
-
+    
 
     private void Awake()
     {

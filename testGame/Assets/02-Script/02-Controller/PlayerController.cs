@@ -11,10 +11,9 @@ public class PlayerController : MonoBehaviour
         Init();
     }
 
-
     private void Init()
     {
-        playerBehaviour = gameObject.GetComponent<PlayerBehaviour>();
+        playerBehaviour = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
 
     }
 

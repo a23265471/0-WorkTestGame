@@ -14,6 +14,11 @@ public class ObstacleController : MonoBehaviour
     }
 
     private CreateObstacle createObstacle;
+    private GameObject[] currentObstacle;
+    private GameObject[] NextObstacle;
+
+    [SerializeField]
+    private Vector3 nextObstaclePosition;
 
     [SerializeField]
     public LevelSetting levelSetting;
@@ -23,18 +28,27 @@ public class ObstacleController : MonoBehaviour
     {
         [Header("關卡機率設定")]
         public int Level;
-        [Range(1,3)]
-        public int MaxCircleAmount;
-        [Range(1, 100)]
-        public int MaxCircleAmountAppearProbability;
+         
+        [Header("圓環數比例")]
+        public CircleAmountProportion[] circleAmountProportion;
+        
 
         [Header("障礙物數值設定")]
         public PartOfObstacle Circle_S;
         public PartOfObstacle Circle_M;
         public PartOfObstacle Circle_L;
     }
-    
+
     [System.Serializable]
+    public struct CircleAmountProportion
+    {
+        public string Name;
+        [Range(0, 10)]
+        public int CircleProportion;
+
+
+    }
+        [System.Serializable]
     public struct PartOfObstacle
     {
         //[Header("圓形的尺寸 S:0 M:1 L:2")]
@@ -57,7 +71,6 @@ public class ObstacleController : MonoBehaviour
     {
         Init();
 
-
     }
 
     private void Start()
@@ -66,11 +79,18 @@ public class ObstacleController : MonoBehaviour
     }
 
     private void Init()
-    {
-        
+    {        
         createObstacle = gameObject.GetComponent<CreateObstacle>();
         InitObstacleSetting();
-        
+        currentObstacle = new GameObject[3];
+        NextObstacle = new GameObject[3];
+    }
+
+    private void InitObstacleSetting()
+    {
+        levelSetting.Circle_S.Size = ObstacleSize.Small;
+        levelSetting.Circle_M.Size = ObstacleSize.Medium;
+        levelSetting.Circle_L.Size = ObstacleSize.Large;
 
     }
 
@@ -78,42 +98,102 @@ public class ObstacleController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            CreatObstacle();
+            CreatObstacle(ref currentObstacle);
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+                createObstacle.RecoverObstacle(currentObstacle);
+
+          //  Debug.Log(currentObstacle.Length);
         }
 
     }
 
-
-
-
-    public void CreatObstacle()
+    public void StartGame()
     {
-        int randomRange = Random.Range(0, 100);
 
-        if (randomRange <= levelSetting.MaxCircleAmountAppearProbability)
-        {          
-            PartOfObstacle[] appeared = new PartOfObstacle[] { levelSetting.Circle_S, levelSetting.Circle_M, levelSetting.Circle_L };
-            int currentRandomLength = appeared.Length;
-            for (int j = 0; j < levelSetting.MaxCircleAmount; j++)
-            {
+        CreatObstacle(ref currentObstacle);
 
-                CreateCircle(ref appeared);
-              //  Debug.Log("Create One Circle");
-            }
-        }
-        else
+    }
+
+    /*public void GetCurrentObstacle()
+    {
+        if (currentObstacle == null)
         {
-            //CreateCircle(-1);
+            currentObstacle = NextObstacle;
+            NextObstacle = null;
+        }
+    }*/
+
+    public void LoadNextObstacle()
+    {
+        CreatObstacle(ref NextObstacle);
+        for (int i = 0; i < NextObstacle.Length; i++)
+        {
+            if (NextObstacle[i] != null)
+            {
+                NextObstacle[i].transform.position = nextObstaclePosition;
+            }
+          //  
 
         }
+    }
+
+    public void UnLoadPreObstacle()
+    {
+        createObstacle.RecoverObstacle(currentObstacle);
+        currentObstacle = null;
+    }
+
+    public void ClearAllObstacle()
+    {
+        createObstacle.RecoverObstacle(currentObstacle);
+        createObstacle.RecoverObstacle(NextObstacle);
+
+
+        currentObstacle = new GameObject[3];
+        NextObstacle = new GameObject[3];
+    }
+
+    private void CreatObstacle(ref GameObject[] Obstacle)
+    {
+        int circleSizeProportionSun = 0;
+        int randomRange;
+        int currentProportionRange = 0;
+
+        for (int i = 0; i < levelSetting.circleAmountProportion.Length; i++)
+        {
+            circleSizeProportionSun += levelSetting.circleAmountProportion[i].CircleProportion;
+        }
+
+        randomRange = Random.Range(1, circleSizeProportionSun);
+
+        for (int currentCircle = 0; currentCircle < levelSetting.circleAmountProportion.Length; currentCircle++)
+        {
+            Debug.Log("圓環機率 min : " + currentProportionRange + " Max : " + (levelSetting.circleAmountProportion[currentCircle].CircleProportion + currentProportionRange) + " 現在機率 : " + randomRange);
+
+            if (randomRange > currentProportionRange && randomRange <= (levelSetting.circleAmountProportion[currentCircle].CircleProportion + currentProportionRange)) 
+            {
+                PartOfObstacle[] appeared = new PartOfObstacle[] { levelSetting.Circle_S, levelSetting.Circle_M, levelSetting.Circle_L };
+                for (int q = 0; q < (currentCircle + 1); q++) 
+                {
+                    Obstacle[q] = CreateCircle(ref appeared);//存入當前的障礙物
+                }
+
+                break;
+            }
+
+            currentProportionRange += levelSetting.circleAmountProportion[currentCircle].CircleProportion;
+        }     
 
     }
     
-    private void CreateCircle(ref PartOfObstacle[] appearedCircleList/*,ref int currentRandomLength*/)
+    private GameObject CreateCircle(ref PartOfObstacle[] appearedCircleList/*,ref int currentRandomLength*/)
     {
         int sizeAppearRange;
         int sizeAppearRangeSum = 0;
         int currentAppearRange = 0;
+        GameObject currentCircle = null;
 
         for (int i = 0; i < appearedCircleList.Length; i++)
         {
@@ -125,42 +205,30 @@ public class ObstacleController : MonoBehaviour
 
         }
 
-        sizeAppearRange = Random.Range(0, sizeAppearRangeSum);
+        sizeAppearRange = Random.Range(1, sizeAppearRangeSum);
 
-        for (int j = 0; j < appearedCircleList.Length; j++)
+        for (int j = 0; j < appearedCircleList.Length; j++)//判斷該製造哪種尺寸的圓
         {
 
             if (appearedCircleList[j].Size != ObstacleSize.Null)
             {
+           //     Debug.Log("機率 Min : " + currentAppearRange + "  MAX : "+ (currentAppearRange + appearedCircleList[j].AppearProportion) + "  現在機率" + sizeAppearRange);
+
                 if (sizeAppearRange > currentAppearRange && sizeAppearRange <= (currentAppearRange + appearedCircleList[j].AppearProportion))
                 {
-                    createObstacle.CreateOneObstacle((int)appearedCircleList[j].Size, appearedCircleList[j].MaxSector, appearedCircleList[j].MinSpeed, appearedCircleList[j].MaxSpeed);
-                    currentAppearRange += appearedCircleList[j].AppearProportion;
+                    currentCircle = createObstacle.CreateOneObstacle((int)appearedCircleList[j].Size, appearedCircleList[j].MaxSector, appearedCircleList[j].MinSpeed, appearedCircleList[j].MaxSpeed);
                     appearedCircleList[j].Size = ObstacleSize.Null;
-                    break;
-                }
 
+                    //break;
+                }
+                currentAppearRange += appearedCircleList[j].AppearProportion;
 
             }
 
-
         }
 
-
-
-
-
-    }
-
-
-
-    private void InitObstacleSetting()
-    {
-        levelSetting.Circle_S.Size = ObstacleSize.Small;
-        levelSetting.Circle_M.Size = ObstacleSize.Medium;
-        levelSetting.Circle_L.Size = ObstacleSize.Large;
+        return currentCircle;
         
     }
-
 
 }

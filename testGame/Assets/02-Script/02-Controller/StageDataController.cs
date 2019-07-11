@@ -11,15 +11,20 @@ public class StageDataController : MonoBehaviour
     public static StageDataController instance;
     public PlayerJsonData PlayerJson;
 
-
     private void Awake()
     {
-        
-        StartCoroutine("GetJson");
 
+        GetData();
     }
+
     private void Start()
     {
+
+    }
+
+    public void GetData()
+    {
+        StartCoroutine("GetJson");
 
     }
 

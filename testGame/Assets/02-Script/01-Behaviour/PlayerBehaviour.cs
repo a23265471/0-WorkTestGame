@@ -63,7 +63,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
 
         yield return new WaitForEndOfFrame();
-        playerData = GameFacade.GetInstance().PlayerData;
+        playerData = GameFacade.GetInstance().stageDataController.PlayerJson;
        // Debug.Log(playerData.MaxFallSpeed);
     }
 
@@ -131,11 +131,7 @@ public class PlayerBehaviour : MonoBehaviour
         {
             gameManager.GameOver();
 
-
         }
-
-
-
 
     }
 

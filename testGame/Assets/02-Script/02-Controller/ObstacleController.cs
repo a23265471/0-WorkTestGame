@@ -102,7 +102,7 @@ public class ObstacleController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.X))
         {
-                createObstacle.RecoverObstacle(currentObstacle);
+            createObstacle.RecoverObstacle(currentObstacle);
 
           //  Debug.Log(currentObstacle.Length);
         }
@@ -112,7 +112,7 @@ public class ObstacleController : MonoBehaviour
     public void StartGame()
     {
 
-        CreatObstacle(ref currentObstacle);
+        ResetObstacle(ref currentObstacle,Vector3.zero);
 
     }
 
@@ -127,22 +127,13 @@ public class ObstacleController : MonoBehaviour
 
     public void LoadNextObstacle()
     {
-        CreatObstacle(ref NextObstacle);
-        for (int i = 0; i < NextObstacle.Length; i++)
-        {
-            if (NextObstacle[i] != null)
-            {
-                NextObstacle[i].transform.position = nextObstaclePosition;
-            }
-          //  
-
-        }
+        ResetObstacle(ref NextObstacle, nextObstaclePosition);
     }
 
     public void UnLoadPreObstacle()
     {
         createObstacle.RecoverObstacle(currentObstacle);
-        currentObstacle = null;
+     //   currentObstacle = null;
     }
 
     public void ClearAllObstacle()
@@ -151,8 +142,46 @@ public class ObstacleController : MonoBehaviour
         createObstacle.RecoverObstacle(NextObstacle);
 
 
+     /*   for (int i = 0; i < 3; i++)
+        {
+            
+
+            currentObstacle[i].transform.position = Vector3.zero;
+            NextObstacle[i].transform.position = Vector3.zero;
+
+        
+        }*/
+
+
         currentObstacle = new GameObject[3];
         NextObstacle = new GameObject[3];
+    }
+
+    private void ResetObstacle(ref GameObject[] Obstacle,Vector3 resetPosition)
+    {
+        CreatObstacle(ref Obstacle);
+
+        GameObject game = createObstacle.GetObject(createObstacle.ObstaclePrefab[4].ID);
+
+        for (int i = 0; i < Obstacle.Length; i++)
+        {
+            if (Obstacle[i] != null)
+            {
+                Obstacle[i].transform.parent = game.transform;
+                game.transform.position = resetPosition;
+
+                Obstacle[i].transform.localPosition = new Vector3(0,0,0);
+                for (int j = 0; j < Obstacle[i].transform.childCount; j++)
+                {
+                    Obstacle[i].transform.GetChild(j).transform.localPosition = new Vector3(0, 0, 0);
+                }
+
+            }
+            //  
+
+        }                     
+
+
     }
 
     private void CreatObstacle(ref GameObject[] Obstacle)
@@ -170,7 +199,7 @@ public class ObstacleController : MonoBehaviour
 
         for (int currentCircle = 0; currentCircle < levelSetting.circleAmountProportion.Length; currentCircle++)
         {
-            Debug.Log("圓環機率 min : " + currentProportionRange + " Max : " + (levelSetting.circleAmountProportion[currentCircle].CircleProportion + currentProportionRange) + " 現在機率 : " + randomRange);
+            Debug.Log("圓環個數機率 min : " + currentProportionRange + " Max : " + (levelSetting.circleAmountProportion[currentCircle].CircleProportion + currentProportionRange) + " 現在機率 : " + randomRange);
 
             if (randomRange > currentProportionRange && randomRange <= (levelSetting.circleAmountProportion[currentCircle].CircleProportion + currentProportionRange)) 
             {

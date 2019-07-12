@@ -84,6 +84,12 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
+    public void SwitchRigidbody(bool State)
+    {
+
+        rigidbody2.simulated = State;
+    }
+
     IEnumerator PostJson()
     {
         WWWForm form = new WWWForm();
@@ -124,16 +130,35 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Obstacle"))
+        switch (other.tag)
         {
-            gameManager.GameOver();
+            case "Obstacle":
+                gameManager.GameOver();
+
+                break;
+            case "Scroll":
+
+                break;
+
 
         }
 
+
     }
 
+    public void Scroll()
+    {
+        transform.parent.gameObject.transform.position = transform.parent.gameObject.transform.position - new Vector3(0, 10f * Time.deltaTime, 0);
+
+    }
+
+  /*  IEnumerator ScrollPosition()
+    {
+
+        while()
+
+    }*/
 
 }

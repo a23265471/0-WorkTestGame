@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class CreateObstacle : MonoBehaviour
 {
-    [SerializeField]
-    private ObstaclePrefabInfo[] ObstaclePrefab;
+    public ObstaclePrefabInfo[] ObstaclePrefab;
 
 
     private GameObject[] obstacleCollection;
 
 
     [System.Serializable]
-    private struct ObstaclePrefabInfo
+    public struct ObstaclePrefabInfo
     {
         [Header("Obstacle Info")]
         public string Name;
@@ -70,7 +69,7 @@ public class CreateObstacle : MonoBehaviour
               //  Debug.Log(rotationAngle[angle]);
 
             }
-            obstacle.transform.Rotate(new Vector3(0, 0, rotationAngle[angle]));
+            obstacle.transform.localEulerAngles = new Vector3(0, 0, rotationAngle[angle]);
             rotationAngle[angle] = -1;
 
         }
@@ -139,31 +138,34 @@ public class CreateObstacle : MonoBehaviour
 
     public void RecoverObstacle(GameObject[] obstacle)
     {
-       // Debug.Log(obstacle[0].transform.childCount);
+        // Debug.Log(obstacle[0].transform.childCount);
 
         for (int i = 0; i < obstacle.Length; i++)
         {
             if (obstacle[i] == null)
             {
+                Debug.Log("hh");
+
                 break;
 
             }
             else
             {
-
-                for (int j = 0; j < obstacle[i].transform.childCount; j++)
+                int childCount = obstacle[i].transform.childCount;
+                obstacle[i].transform.parent.gameObject.SetActive(false);
+                obstacle[i].transform.parent = null;
+                for (int j = 0; j < childCount; j++)
                 {
-                    obstacle[i].transform.GetChild(j).gameObject.SetActive(false);
-                    obstacle[i].transform.GetChild(j).parent = null;
+                    obstacle[i].transform.GetChild(0).gameObject.SetActive(false);
+                    obstacle[i].transform.GetChild(0).gameObject.transform.parent.gameObject.SetActive(false);
+                    obstacle[i].transform.GetChild(0).gameObject.transform.parent = null;
                 }
-                obstacle[i].SetActive(false);
+
 
             }
 
         }
 
-
-       
     }
     
 }

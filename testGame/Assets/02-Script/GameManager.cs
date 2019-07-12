@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-
     public enum GameState
     {
         Start,
@@ -41,7 +40,6 @@ public class GameManager : MonoBehaviour
         //  GameFacade.GetInstance().stageDataController.
         playerController = gameObject.GetComponent<PlayerController>();
         obstacleController = GameFacade.GetInstance().obstacleController;
-        playerController.enabled = false;
     }
 
     private void Start()
@@ -56,6 +54,7 @@ public class GameManager : MonoBehaviour
         CurrentGameState = GameState.Start;
         obstacleController.LoadNextObstacle();
         obstacleController.StartGame();
+        playerController.SwitchControlPlayer(false);
         StartCoroutine(ReadyGameCroutine());
     }
 
@@ -63,39 +62,33 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitUntil(() => Input.anyKey);
         StartGamePanel.SetActive(false);
+        Time.timeScale = 1;
+
+        yield return new WaitForFixedUpdate();
+
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0));
+
         PlayGame();
     }
 
     public void PlayGame()
     {
-        Time.timeScale = 1;
         CurrentGameState = GameState.Play;
-    //    obstacleController.CreatObstacle();
-        StartControlPlayer();
+        //    obstacleController.CreatObstacle();
+        playerController.SwitchControlPlayer(true);
     }
-
-    public void StartControlPlayer()
-    {
-        playerController.enabled = true;
-    }
-
-    public void ChangeLevel(int level)
-    {
-        Level = level;
- 
-    }
-
+  
     public void GameOver()
     {
         CurrentGameState = GameState.GameOver;
         GameOverPanel.SetActive(true);
         obstacleController.ClearAllObstacle();
-       /* obstacleController.LoadNextObstacle();
+        obstacleController.LoadNextObstacle();
         obstacleController.StartGame();
-        */
+        
         //      obstacleController.StartGame();
         Time.timeScale = 0;
-
+        playerController.SwitchControlPlayer(false);
         StartCoroutine(RestartGame());
 
     }
@@ -106,7 +99,14 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 1;
         GameOverPanel.SetActive(false);
+        playerController.ResetPlayer();
+
+        yield return new WaitForFixedUpdate();
+
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0));
+
         PlayGame();
+
     }
 
 

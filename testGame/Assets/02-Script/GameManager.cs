@@ -48,6 +48,24 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+     /*   if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            if (StartGamePanel.activeInHierarchy)
+            {
+                StartGamePanel.SetActive(false);
+
+            }
+            else
+            {
+                StartGamePanel.SetActive(true);
+
+            }
+
+        }*/
+    }
+
     public void StartGame()
     {
         Time.timeScale = 0;
@@ -109,5 +127,21 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void NextObstacle()
+    {
+        playerController.ScrollPlayer(-70, 0.5f);
+        obstacleController.ScrollObject(-70, 0.5f);
+        obstacleController.UnLoadCurrentObstacle();
+        obstacleController.UpdateCurrentObstacle();
+        StartCoroutine(LoadNextObstacle());
+    }
+
+    IEnumerator LoadNextObstacle()
+    {
+
+        yield return new WaitUntil(() => (!obstacleController.isMove && !PlayerBehaviour.playerBehaviour.IsMove));
+        obstacleController.LoadNextObstacle();
+        Debug.Log("LoadNext");
+    }
 
 }

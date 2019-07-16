@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
     private PlayerBehaviour playerBehaviour;
     public Vector3 PlayerStartPosition;
 
-
     private void Awake()
     {
         Init();
@@ -21,17 +20,33 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+/*#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+        if (Input.touchCount == 1)
+        {
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                playerBehaviour.Jump();
+
+            }
+        }
+
+
+#else*/
+      /*  if (Input.touchCount == 1)
+        {
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                playerBehaviour.Jump();
+
+            }
+        }*/
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
         {
-            //    Debug.Log(playerBehaviour = null);
             playerBehaviour.Jump();
-
-
+            
         }
-        else if (Input.GetKey(KeyCode.W))
-        {
-            playerBehaviour.Scroll();
-        }
+
+//#endif
     }
 
     public void ResetPlayer()
@@ -45,4 +60,10 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void ScrollPlayer(float scrollDis, float speed)
+    {
+        playerBehaviour.Scroll(scrollDis, speed);
+      
+
+    }
 }

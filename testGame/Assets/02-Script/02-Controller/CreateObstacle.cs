@@ -5,10 +5,7 @@ using UnityEngine;
 public class CreateObstacle : MonoBehaviour
 {
     public ObstaclePrefabInfo[] ObstaclePrefab;
-
-
     private GameObject[] obstacleCollection;
-
 
     [System.Serializable]
     public struct ObstaclePrefabInfo
@@ -29,26 +26,10 @@ public class CreateObstacle : MonoBehaviour
     private void Init()
     {
         CreatObjectPool();
-       /* CreateOneObstacle();
-        CreateOneObstacle();*/
-       
-
-
     }
-
- /*   public void CreatObstacle(bool Size_S,bool Size_M,bool Size_L)
-    {
-        CreateOneObstacle(0, 2, 50, 100);
-        CreateOneObstacle(1, 2, 130, 170);
-        CreateOneObstacle(2, 1, 200, 220);
-
-    }
-    */
 
     public GameObject CreateOneObstacle(int size,int sectorAmount,float minSpeed,float maxSpeed)
     {
-    //    GameObject ObstacleParent = new GameObject("Obstacle");
-
         GameObject ObstacleParent = GetObject(ObstaclePrefab[3].ID);
 
         int[] rotationAngle;
@@ -144,7 +125,7 @@ public class CreateObstacle : MonoBehaviour
         {
             if (obstacle[i] == null)
             {
-                Debug.Log("hh");
+               // Debug.Log("hh");
 
                 break;
 

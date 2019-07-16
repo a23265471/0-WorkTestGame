@@ -2,28 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    public static PlayerBehaviour playerBehaviour;
     private PlayerJsonData playerData;
-
     private GameManager gameManager;
+    public bool IsMove;
+
+ //   public Text text;
+
+    [SerializeField]
+    private Transform StartPosition;
+
 
     #region Component
     private Rigidbody2D rigidbody2;
 
     #endregion
 
-    #region MoveParameter
-    private float currentSpeed;
-    IEnumerator MoveSmoothly;
-    IEnumerator GravityCroutine;
-
-
-    int clickCount;
-
-    #endregion
     private void Awake()
     {
         Init();
@@ -33,29 +32,28 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Start()
     {
-       // StartCoroutine(PostJson());
-
+        // StartCoroutine(PostJson());
+        
     }
 
     #region Init
-    private void InitParameter()
-    {
-        currentSpeed = 0;
-    }
-
     private void Init()
     {
+        playerBehaviour = this;
         rigidbody2 = gameObject.GetComponent<Rigidbody2D>();
         gameManager = GameFacade.GetInstance().gameManager;
         StartCoroutine(LoadData());
-        MoveSmoothly = null;
-        GravityCroutine = null;
+
+        
+     //   gameObject.transform.parent.gameObject.transform.position = StartPosition.position;
     }
     #endregion
 
     private void Update()
     {
-       //Gravity();
+        //Gravity();
+
+       
     }
 
    
@@ -64,7 +62,10 @@ public class PlayerBehaviour : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
         playerData = GameFacade.GetInstance().stageDataController.PlayerJson;
-       // Debug.Log(playerData.MaxFallSpeed);
+
+       /* Debug.Log(playerData.Score);
+        text.text = playerData.Score.ToString();/*/
+        // Debug.Log(playerData.MaxFallSpeed);
     }
 
     public void Jump()
@@ -77,7 +78,6 @@ public class PlayerBehaviour : MonoBehaviour
         rigidbody2.gravityScale = playerData.Gravity;
         rigidbody2.mass = playerData.Weight;
 
-        clickCount += 1;
       //  Debug.Log(JsonUtility.ToJson(playerData));
 
 
@@ -139,7 +139,9 @@ public class PlayerBehaviour : MonoBehaviour
 
                 break;
             case "Scroll":
-
+                //   Debug.Log("f");
+                gameManager.NextObstacle();
+                
                 break;
 
 
@@ -148,17 +150,26 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
-    public void Scroll()
+    public void Scroll(float scrollDis,float speed)
     {
-        transform.parent.gameObject.transform.position = transform.parent.gameObject.transform.position - new Vector3(0, 10f * Time.deltaTime, 0);
+        float dis = 0;
+        IsMove = true;
+        StartCoroutine(ScrollPosition(dis, scrollDis, speed));
 
     }
 
-  /*  IEnumerator ScrollPosition()
+    IEnumerator ScrollPosition(float dis,float ScrollPos,float speed)
     {
+        Vector3 currPos = transform.parent.gameObject.transform.position;
+        while (dis < 1) 
+        {
+            transform.parent.gameObject.transform.position = Vector3.Lerp(transform.parent.gameObject.transform.position, currPos + new Vector3(0, ScrollPos, 0), dis);
 
-        while()
-
-    }*/
+            dis += speed * Time.deltaTime;
+            yield return null;
+        }
+        IsMove = false;
+        Debug.Log(IsMove);
+    }
 
 }

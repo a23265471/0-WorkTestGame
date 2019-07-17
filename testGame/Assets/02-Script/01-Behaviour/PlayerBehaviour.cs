@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+//using UnityEngine.Networking;
 using UnityEngine.UI;
 
 
@@ -90,7 +90,7 @@ public class PlayerBehaviour : MonoBehaviour
         rigidbody2.simulated = State;
     }
 
-    IEnumerator PostJson()
+    /*IEnumerator PostJson()
     {
         WWWForm form = new WWWForm();
 
@@ -101,7 +101,7 @@ public class PlayerBehaviour : MonoBehaviour
       /* form.AddField("JumpForce", playerData.JumpForce.ToString());
         form.AddField("Weight", playerData.Weight.ToString());
         form.AddField("JumpAcceleration", playerData.JumpAcceleration.ToString());*/
-        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/PHP.php", form))
+    /*    using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/PHP.php", form))
         {
 
             yield return www.SendWebRequest();
@@ -128,7 +128,7 @@ public class PlayerBehaviour : MonoBehaviour
         //   Debug.Log(PlayerJson.MaxFallSpeed);
 
 
-    }
+    }*/
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -143,8 +143,7 @@ public class PlayerBehaviour : MonoBehaviour
                 gameManager.NextObstacle();
                 
                 break;
-
-
+                
         }
 
 

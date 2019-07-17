@@ -858,20 +858,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2516844727361828646, guid: bd1452b8ae3ab6946b352fd91ca12936,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 534669904}
     - target: {fileID: 2516844725961162045, guid: bd1452b8ae3ab6946b352fd91ca12936,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 534669904}
-    - target: {fileID: 2516844726237738421, guid: bd1452b8ae3ab6946b352fd91ca12936,
+    - target: {fileID: 2516844726298855016, guid: bd1452b8ae3ab6946b352fd91ca12936,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -50
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2516844725961162046, guid: bd1452b8ae3ab6946b352fd91ca12936,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2516844725961162046, guid: bd1452b8ae3ab6946b352fd91ca12936,
+        type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1828939333, guid: bd1452b8ae3ab6946b352fd91ca12936, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -122
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd1452b8ae3ab6946b352fd91ca12936, type: 3}

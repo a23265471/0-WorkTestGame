@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
-using UnityEngine.Networking;
+//using UnityEngine.Networking;
 
 public class StageDataController : MonoBehaviour
 {
@@ -41,38 +41,45 @@ public class StageDataController : MonoBehaviour
         form.AddField("Score", playerDatas.Score.ToString());
         form.AddField("Gravity", playerDatas.Gravity.ToString());
 
+        WWW www=new WWW("http://localhost/PHP.php");
+        yield return www;
         //   string test2 = JsonUtility.ToJson(playerDatas);
+        PlayerJson = new PlayerJsonData();
+        PlayerJson = JsonUtility.FromJson<PlayerJsonData>(www.text.Trim("[]".ToCharArray()));
+
+        Debug.Log(PlayerJson.JumpForce);
 
 
-        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/PHP.php", form))
-        {
 
-            yield return www.SendWebRequest();
+        /*  using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/PHP.php", form))
+          {
 
-            // yield return www.SendWebRequest();
+              yield return www.SendWebRequest();
 
-            //  JSONObject json = JSONObject.Parse(www.downloadHandler.text.Trim("[]".ToCharArray()));
+              // yield return www.SendWebRequest();
 
-            if (www.isNetworkError || www.isHttpError)
-            {
+              //  JSONObject json = JSONObject.Parse(www.downloadHandler.text.Trim("[]".ToCharArray()));
 
-                Debug.Log(www.error);
-            }
-            else
-            {
-                //   www.SetRequestHeader("Content-Type", "application/json");
-                PlayerJson = new PlayerJsonData();
-                PlayerJson = JsonUtility.FromJson<PlayerJsonData>(www.downloadHandler.text.Trim("[]".ToCharArray()));
+              if (www.isNetworkError || www.isHttpError)
+              {
 
-                Debug.Log(www.downloadHandler.text);
+                  Debug.Log(www.error);
+              }
+              else
+              {
+                  //   www.SetRequestHeader("Content-Type", "application/json");
+                  PlayerJson = new PlayerJsonData();
+                  PlayerJson = JsonUtility.FromJson<PlayerJsonData>(www.downloadHandler.text.Trim("[]".ToCharArray()));
 
-            }
+                  Debug.Log(www.downloadHandler.text);
 
-        }
-     //   Debug.Log(PlayerJson.MaxFallSpeed);
+              }
+
+          }*/
+        //   Debug.Log(PlayerJson.MaxFallSpeed);
 
 
     }
 
-    
+
 }
